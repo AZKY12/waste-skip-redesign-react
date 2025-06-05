@@ -1,4 +1,3 @@
-````markdown
 # Skip Hire Selection Interface
 
 A modern, responsive web application for selecting skip hire services, built with React, TypeScript, and Tailwind CSS.
