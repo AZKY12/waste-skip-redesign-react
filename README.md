@@ -88,4 +88,3 @@ The live, testable version is hosted on Vercel:
 * Location-based pricing calculator
 * Skip comparison and user preferences
 
-```
