@@ -81,7 +81,7 @@ src/
 ## 🚀 Deployment
 
 The live, testable version is hosted on Vercel:
-👉 [https://waste-skip-redesign.vercel.app](https://waste-skip-redesign.vercel.app)
+👉 [https://waste-skip-redesign.vercel.app](https://waste-skip-redesign-react.vercel.app/)
 
 ---
 * Advanced filtering and availability check
