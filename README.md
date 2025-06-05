@@ -89,4 +89,3 @@ The live, testable version is hosted on Vercel:
 * Skip comparison and user preferences
 
 ```
-```
