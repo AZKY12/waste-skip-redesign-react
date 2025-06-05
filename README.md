@@ -21,7 +21,7 @@ A modern, responsive web application for selecting skip hire services, built wit
    ```bash
    git clone https://github.com/AZKY12/waste-skip-redesign-react.git
    cd waste-skip-redesign-react
-````
+
 
 2. **Install dependencies**:
 
@@ -84,9 +84,6 @@ The live, testable version is hosted on Vercel:
 👉 [https://waste-skip-redesign.vercel.app](https://waste-skip-redesign.vercel.app)
 
 ---
-
-## 📌 Future Improvements
-
 * Advanced filtering and availability check
 * Location-based pricing calculator
 * Skip comparison and user preferences
