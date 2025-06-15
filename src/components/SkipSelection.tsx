@@ -1,14 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import StepIndicator from './StepIndicator';
 import SkipCard, { SkipData } from './SkipCard';
-import ThemeToggle from './ThemeToggle';
 import { ArrowLeft, ArrowRight, Filter, MapPin } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
+import { useBooking } from '../contexts/BookingContext';
 
 const SkipSelection: React.FC = () => {
-  const [selectedSkip, setSelectedSkip] = useState<SkipData | null>(null);
+  const { bookingData, updateSelectedSkip, setCurrentStep } = useBooking();
+  const [selectedSkip, setSelectedSkip] = useState<SkipData | null>(bookingData.selectedSkip);
   const [skips, setSkips] = useState<SkipData[]>([]);
 
   // Mock data as provided in the challenge
@@ -154,13 +154,17 @@ const SkipSelection: React.FC = () => {
 
   const handleSkipSelect = (skip: SkipData) => {
     setSelectedSkip(skip);
+    updateSelectedSkip(skip);
   };
 
   const handleContinue = () => {
     if (selectedSkip) {
-      console.log('Selected skip:', selectedSkip);
-      // Navigate to next step
+      setCurrentStep('permit');
     }
+  };
+
+  const handleBack = () => {
+    setCurrentStep('waste-type');
   };
 
   const autoplayPlugin = React.useRef(Autoplay({
@@ -236,7 +240,7 @@ const SkipSelection: React.FC = () => {
         <div className="flex items-center justify-center gap-1 mb-2 sm:mb-3">
           <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 dark:text-blue-400 flex-shrink-0" />
           <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
-            Delivering to: <strong className="text-blue-600 dark:text-blue-400">NR32</strong>
+            Delivering to: <strong className="text-blue-600 dark:text-blue-400">{bookingData.address.postcode || 'NR32'}</strong>
           </span>
         </div>
 
@@ -295,7 +299,10 @@ const SkipSelection: React.FC = () => {
 
         {/* Mobile-optimized navigation */}
         <div className="flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-2 sm:gap-4 pb-4">
-          <button className="flex items-center justify-center gap-1 px-3 py-2 sm:px-4 sm:py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-all duration-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 min-h-[40px] touch-manipulation">
+          <button 
+            onClick={handleBack}
+            className="flex items-center justify-center gap-1 px-3 py-2 sm:px-4 sm:py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-all duration-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 min-h-[40px] touch-manipulation"
+          >
             <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="text-xs sm:text-sm font-medium">Back</span>
           </button>

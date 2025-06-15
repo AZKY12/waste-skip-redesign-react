@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Check, MapPin, Trash2, Truck, Calendar, CreditCard, CheckCircle, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useBooking } from '../contexts/BookingContext';
 
 interface Step {
   id: string;
@@ -15,56 +15,63 @@ interface StepIndicatorProps {
   currentStep: string;
 }
 
-const StepIndicator: React.FC<StepIndicatorProps> = ({
-  currentStep
-}) => {
-  const {
-    isDark,
-    toggleTheme
-  } = useTheme();
+const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
+  const { isDark, toggleTheme } = useTheme();
+  const { bookingData } = useBooking();
 
-  const steps: Step[] = [{
-    id: 'postcode',
-    title: 'Postcode',
-    icon: MapPin,
-    completed: true,
-    current: false
-  }, {
-    id: 'waste-type',
-    title: 'Waste Type',
-    icon: Trash2,
-    completed: true,
-    current: false
-  }, {
-    id: 'skip-size',
-    title: 'Select Skip',
-    icon: Truck,
-    completed: false,
-    current: currentStep === 'skip-size'
-  }, {
-    id: 'permit',
-    title: 'Permit Check',
-    icon: CheckCircle,
-    completed: false,
-    current: false
-  }, {
-    id: 'date',
-    title: 'Choose Date',
-    icon: Calendar,
-    completed: false,
-    current: false
-  }, {
-    id: 'payment',
-    title: 'Payment',
-    icon: CreditCard,
-    completed: false,
-    current: false
-  }];
+  const stepOrder = ['postcode', 'waste-type', 'skip-size', 'permit', 'date', 'payment'];
+  const currentStepIndex = stepOrder.indexOf(currentStep);
+
+  const steps: Step[] = [
+    {
+      id: 'postcode',
+      title: 'Postcode',
+      icon: MapPin,
+      completed: currentStepIndex > 0 && !!bookingData.address.postcode,
+      current: currentStep === 'postcode'
+    },
+    {
+      id: 'waste-type',
+      title: 'Waste Type',
+      icon: Trash2,
+      completed: currentStepIndex > 1 && bookingData.wasteTypes.length > 0,
+      current: currentStep === 'waste-type'
+    },
+    {
+      id: 'skip-size',
+      title: 'Select Skip',
+      icon: Truck,
+      completed: currentStepIndex > 2 && !!bookingData.selectedSkip,
+      current: currentStep === 'skip-size'
+    },
+    {
+      id: 'permit',
+      title: 'Permit Check',
+      icon: CheckCircle,
+      completed: currentStepIndex > 3,
+      current: currentStep === 'permit'
+    },
+    {
+      id: 'date',
+      title: 'Choose Date',
+      icon: Calendar,
+      completed: currentStepIndex > 4 && !!bookingData.deliveryDate,
+      current: currentStep === 'date' || currentStep === 'date-selection'
+    },
+    {
+      id: 'payment',
+      title: 'Payment',
+      icon: CreditCard,
+      completed: false,
+      current: currentStep === 'payment'
+    }
+  ];
 
   const completedStepsCount = steps.filter(step => step.completed).length;
-  const progressPercentage = completedStepsCount / steps.length * 100;
+  const progressPercentage = (completedStepsCount / steps.length) * 100;
 
-  return <div className="w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-100 dark:border-gray-800 mb-3 lg:mb-4 transition-all duration-500">
+  return (
+    <div className="w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-100 dark:border-gray-800 mb-3 lg:mb-4 transition-all duration-500">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
         {/* Single-line navbar layout */}
         <div className="flex items-center justify-between gap-4">
@@ -75,26 +82,27 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
                 Skip Hire Process
               </h2>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                Step {completedStepsCount + 1} of {steps.length}
+                Step {currentStepIndex + 1} of {steps.length}
               </p>
             </div>
             
-            {/* Enhanced progress bar with integrated desktop steps - decreased line size */}
+            {/* Enhanced progress bar with integrated desktop steps */}
             <div className="hidden md:flex items-center gap-3 flex-1 max-w-4xl">
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
                 Progress
               </span>
               
-              {/* Integrated steps with smaller progress line */}
+              {/* Integrated steps with progress line */}
               <div className="flex-1 relative">
-                {/* Smaller background progress line */}
+                {/* Background progress line */}
                 <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 -translate-y-1/2 rounded-full overflow-hidden shadow-inner">
-                  <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 transition-all duration-1000 ease-out" style={{
-                    width: `${completedStepsCount / (steps.length - 1) * 100}%`
-                  }} />
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 transition-all duration-1000 ease-out" 
+                    style={{ width: `${progressPercentage}%` }}
+                  />
                 </div>
                 
-                {/* Step indicators with reduced effects */}
+                {/* Step indicators */}
                 <div className="flex items-center justify-between relative z-10">
                   {steps.map((step, index) => (
                     <div key={step.id} className="flex flex-col items-center group">
@@ -127,18 +135,25 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
           </div>
 
           {/* Right section: Theme toggle */}
-          <button onClick={toggleTheme} className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-sm shrink-0">
-            {isDark ? <>
+          <button 
+            onClick={toggleTheme} 
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-sm shrink-0"
+          >
+            {isDark ? (
+              <>
                 <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500" />
                 <span className="hidden sm:inline text-xs font-medium text-gray-700 dark:text-gray-300">Light</span>
-              </> : <>
+              </>
+            ) : (
+              <>
                 <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
                 <span className="hidden sm:inline text-xs font-medium text-gray-700 dark:text-gray-300">Dark</span>
-              </>}
+              </>
+            )}
           </button>
         </div>
 
-        {/* Mobile progress bar - decreased thickness */}
+        {/* Mobile progress bar */}
         <div className="md:hidden mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-1.5">
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
@@ -149,35 +164,52 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
             </span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden shadow-inner">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-1000 ease-out" style={{
-              width: `${progressPercentage}%`
-            }} />
+            <div 
+              className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-1000 ease-out" 
+              style={{ width: `${progressPercentage}%` }}
+            />
           </div>
         </div>
       </div>
 
-      {/* Mobile steps section - reduced glow effects */}
+      {/* Mobile steps section */}
       <div className="max-w-7xl mx-auto sm:px-4 py-2 sm:py-3 px-[12px] rounded-md lg:py-[5px] lg:px-[12px] md:hidden">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {steps.map((step, index) => <div key={step.id} className="flex flex-col items-center min-w-[70px] relative">
+          {steps.map((step, index) => (
+            <div key={step.id} className="flex flex-col items-center min-w-[70px] relative">
               {/* Connection line for mobile */}
-              {index < steps.length - 1 && <div className="absolute top-5 left-[calc(100%-12px)] w-6 h-1 bg-gray-200 dark:bg-gray-700 z-0 rounded-full">
-                  <div className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 rounded-full" style={{
-              width: step.completed ? '100%' : '0%'
-            }} />
-                </div>}
+              {index < steps.length - 1 && (
+                <div className="absolute top-5 left-[calc(100%-12px)] w-6 h-1 bg-gray-200 dark:bg-gray-700 z-0 rounded-full">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 rounded-full" 
+                    style={{ width: step.completed ? '100%' : '0%' }}
+                  />
+                </div>
+              )}
               
-              <div className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center border-2 transition-all duration-500 transform hover:scale-110 ${step.completed ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md' : step.current ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 shadow-sm'}`} style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}>
+              <div className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center border-2 transition-all duration-500 transform hover:scale-110 ${
+                step.completed 
+                  ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md' 
+                  : step.current 
+                  ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
+                  : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 shadow-sm'
+              }`} style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}>
                 {step.completed ? <Check className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
               </div>
               
-              <span className={`mt-1.5 text-xs font-semibold text-center transition-colors duration-300 leading-tight ${step.completed || step.current ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
+              <span className={`mt-1.5 text-xs font-semibold text-center transition-colors duration-300 leading-tight ${
+                step.completed || step.current 
+                  ? 'text-gray-900 dark:text-white' 
+                  : 'text-gray-500 dark:text-gray-400'
+              }`}>
                 {step.title}
               </span>
-            </div>)}
+            </div>
+          ))}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default StepIndicator;
