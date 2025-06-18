@@ -58,26 +58,30 @@ const WasteTypeStep: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 transition-colors duration-500">
       <StepIndicator currentStep="waste-type" />
       
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header Section */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
             What type of waste are you disposing of?
           </h1>
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+            Select all waste types that apply to your project. This helps us recommend the right skip size.
+          </p>
         </div>
 
         {/* Info Banner */}
-        <div className="bg-blue-900/50 border border-blue-700 rounded-lg p-4 mb-8 flex items-start gap-3">
-          <Info className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-          <p className="text-blue-200 text-sm">
-            Select all that apply
+        <div className="bg-blue-100 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-700 rounded-lg p-4 mb-8 flex items-start gap-3 max-w-2xl mx-auto">
+          <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+          <p className="text-blue-800 dark:text-blue-200 text-sm">
+            Select all that apply - you can choose multiple waste types
           </p>
         </div>
 
         {/* Waste Type Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 max-w-4xl mx-auto">
           {wasteTypes.map((type) => {
             const Icon = type.icon;
             const isSelected = selectedTypes.includes(type.id);
@@ -86,10 +90,10 @@ const WasteTypeStep: React.FC = () => {
               <button
                 key={type.id}
                 onClick={() => handleTypeToggle(type.id)}
-                className={`relative p-6 rounded-lg border-2 transition-all duration-300 text-left hover:scale-105 ${
+                className={`relative p-6 rounded-lg border-2 transition-all duration-300 text-left hover:scale-105 transform bg-white dark:bg-gray-800 shadow-md hover:shadow-lg ${
                   isSelected
-                    ? 'border-blue-500 bg-blue-900/30'
-                    : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+                    ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600'
                 }`}
               >
                 {isSelected && (
@@ -101,15 +105,17 @@ const WasteTypeStep: React.FC = () => {
                 )}
                 
                 <div className="flex items-start gap-4">
-                  <div className={`p-3 rounded-lg ${
-                    isSelected ? 'bg-blue-500' : 'bg-gray-700'
+                  <div className={`p-3 rounded-lg transition-colors ${
+                    isSelected 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                   }`}>
                     <Icon className="w-6 h-6" />
                   </div>
                   
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold mb-2">{type.name}</h3>
-                    <p className="text-gray-400 text-sm">{type.description}</p>
+                    <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">{type.name}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">{type.description}</p>
                   </div>
                 </div>
               </button>
@@ -119,19 +125,26 @@ const WasteTypeStep: React.FC = () => {
 
         {/* Selected Types Summary */}
         {selectedTypes.length > 0 && (
-          <div className="bg-gray-800/50 rounded-lg p-4 mb-8">
-            <h3 className="text-lg font-semibold mb-2">Selected Waste Types</h3>
-            <p className="text-gray-300 text-sm">
-              {getSelectedTypeNames().join(', ')}
-            </p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 mb-8 shadow-md border border-gray-200 dark:border-gray-700 max-w-2xl mx-auto">
+            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Selected Waste Types</h3>
+            <div className="flex flex-wrap gap-2">
+              {getSelectedTypeNames().map((name, index) => (
+                <span 
+                  key={index}
+                  className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium"
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center max-w-2xl mx-auto">
           <button
             onClick={handleBack}
-            className="flex items-center gap-2 px-6 py-3 text-gray-300 hover:text-white transition-colors"
+            className="flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -140,7 +153,7 @@ const WasteTypeStep: React.FC = () => {
           <button
             onClick={handleContinue}
             disabled={selectedTypes.length === 0}
-            className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
+            className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
           >
             Continue
             <ArrowRight className="w-4 h-4" />

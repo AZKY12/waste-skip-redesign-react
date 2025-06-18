@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, MapPin, Calendar, Truck, X, CreditCard } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Truck, X, CreditCard, Shield } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
 import StepIndicator from './StepIndicator';
 
@@ -61,53 +61,69 @@ const PaymentStep: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 transition-colors duration-500">
       <StepIndicator currentStep="payment" />
       
       <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+            Complete Your Order
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+            Review your order details and complete your payment securely
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Order Summary */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <CreditCard className="w-6 h-6" />
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900 dark:text-white">
+              <Truck className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               Order Summary
             </h2>
 
             {/* Delivery Address */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-blue-400" />
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-gray-900 dark:text-white">
+                <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 Delivery Address
               </h3>
-              <div className="text-gray-300">
-                <p>{bookingData.address.houseNumber} {bookingData.address.streetName}, {bookingData.address.city}</p>
-                <p>{bookingData.address.postcode}</p>
+              <div className="text-gray-700 dark:text-gray-300">
+                <p className="font-medium">{bookingData.address.houseNumber} {bookingData.address.streetName}</p>
+                <p>{bookingData.address.city}, {bookingData.address.postcode}</p>
               </div>
             </div>
 
             {/* Delivery & Collection */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-blue-400" />
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2 text-gray-900 dark:text-white">
+                <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 Delivery & Collection
               </h3>
-              <div className="text-gray-300 space-y-1">
-                <p>Delivery: <span className="font-medium">{formatDate(bookingData.deliveryDate)}</span></p>
-                <p>Collection: <span className="font-medium">{formatDate(bookingData.collectionDate)}</span></p>
+              <div className="text-gray-700 dark:text-gray-300 space-y-2">
+                <div className="flex justify-between">
+                  <span>Delivery:</span>
+                  <span className="font-medium">{formatDate(bookingData.deliveryDate)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Collection:</span>
+                  <span className="font-medium">{formatDate(bookingData.collectionDate)}</span>
+                </div>
               </div>
             </div>
 
             {/* Skip Details */}
             {bookingData.selectedSkip && (
-              <div className="mb-6 pb-6 border-b border-gray-700">
+              <div className="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="text-lg font-semibold">{bookingData.selectedSkip.size} Yard Skip</h4>
-                    <p className="text-gray-400 text-sm">{bookingData.selectedSkip.hire_period_days} day hire period</p>
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{bookingData.selectedSkip.size} Yard Skip</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">{bookingData.selectedSkip.hire_period_days} day hire period</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold">£{bookingData.selectedSkip.price_before_vat.toFixed(2)}</p>
-                    <p className="text-gray-400 text-sm">+ VAT £{(bookingData.selectedSkip.price_before_vat * 0.2).toFixed(2)}</p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white">£{bookingData.selectedSkip.price_before_vat.toFixed(2)}</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">+ VAT £{(bookingData.selectedSkip.price_before_vat * 0.2).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -115,21 +131,22 @@ const PaymentStep: React.FC = () => {
 
             {/* Additional Charges */}
             <div className="mb-6">
-              <h4 className="text-lg font-semibold mb-4">Additional Charges</h4>
+              <h4 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Additional Charges</h4>
               
               {additionalCharges.permitFee > 0 && (
-                <div className="flex justify-between items-center mb-3 p-3 bg-gray-700 rounded-lg">
+                <div className="flex justify-between items-center mb-3 p-3 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
                   <div>
-                    <p className="font-medium">Road Permit Fee</p>
+                    <p className="font-medium text-gray-900 dark:text-white">Road Permit Fee</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Required for public road placement</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="font-bold">£{additionalCharges.permitFee.toFixed(2)}</p>
-                      <p className="text-gray-400 text-sm">+ VAT £{(additionalCharges.permitFee * 0.2).toFixed(2)}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">£{additionalCharges.permitFee.toFixed(2)}</p>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">+ VAT £{(additionalCharges.permitFee * 0.2).toFixed(2)}</p>
                     </div>
                     <button
                       onClick={() => removeCharge('permit')}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -138,18 +155,19 @@ const PaymentStep: React.FC = () => {
               )}
 
               {additionalCharges.tonneBag > 0 && (
-                <div className="flex justify-between items-center mb-3 p-3 bg-gray-700 rounded-lg">
+                <div className="flex justify-between items-center mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                   <div>
-                    <p className="font-medium">1x Tonne Bag</p>
+                    <p className="font-medium text-gray-900 dark:text-white">1x Tonne Bag</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Additional waste capacity</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="font-bold">£{additionalCharges.tonneBag.toFixed(2)}</p>
-                      <p className="text-gray-400 text-sm">+ VAT £{(additionalCharges.tonneBag * 0.2).toFixed(2)}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">£{additionalCharges.tonneBag.toFixed(2)}</p>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">+ VAT £{(additionalCharges.tonneBag * 0.2).toFixed(2)}</p>
                     </div>
                     <button
                       onClick={() => removeCharge('tonneBag')}
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -159,16 +177,16 @@ const PaymentStep: React.FC = () => {
             </div>
 
             {/* Totals */}
-            <div className="space-y-2 pt-4 border-t border-gray-700">
-              <div className="flex justify-between">
+            <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex justify-between text-gray-700 dark:text-gray-300">
                 <span>Subtotal (excl. VAT)</span>
                 <span>£{subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-gray-700 dark:text-gray-300">
                 <span>VAT (20%)</span>
                 <span>£{vat.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-600">
+              <div className="flex justify-between text-2xl font-bold pt-3 border-t border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white">
                 <span>Total</span>
                 <span>£{total.toFixed(2)}</span>
               </div>
@@ -176,54 +194,56 @@ const PaymentStep: React.FC = () => {
           </div>
 
           {/* Payment Details */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <CreditCard className="w-6 h-6 text-blue-400" />
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-900 dark:text-white">
+              <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />
               Payment Details
             </h2>
 
             <div className="space-y-6">
               {/* Card Number */}
               <div>
-                <label className="block text-sm font-medium mb-2">Card number</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Card number</label>
                 <div className="relative">
                   <input
                     type="text"
                     value={paymentData.cardNumber}
                     onChange={(e) => setPaymentData(prev => ({ ...prev, cardNumber: e.target.value }))}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <img src="/api/placeholder/40/25" alt="Visa" className="h-6" />
+                    <div className="w-8 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
+                      VISA
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Expiration Date */}
               <div>
-                <label className="block text-sm font-medium mb-2">Expiration date</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Expiration date</label>
                 <input
                   type="text"
                   placeholder="MM / YY"
                   value={paymentData.expirationDate}
                   onChange={(e) => setPaymentData(prev => ({ ...prev, expirationDate: e.target.value }))}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               {/* Security Code */}
               <div>
-                <label className="block text-sm font-medium mb-2">Security code</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Security code</label>
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="CVC"
                     value={paymentData.securityCode}
                     onChange={(e) => setPaymentData(prev => ({ ...prev, securityCode: e.target.value }))}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <div className="w-8 h-5 bg-gray-600 rounded text-xs flex items-center justify-center">
+                    <div className="w-8 h-5 bg-gray-400 rounded text-white text-xs flex items-center justify-center">
                       123
                     </div>
                   </div>
@@ -232,11 +252,11 @@ const PaymentStep: React.FC = () => {
 
               {/* Country */}
               <div>
-                <label className="block text-sm font-medium mb-2">Country</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Country</label>
                 <select
                   value={paymentData.country}
                   onChange={(e) => setPaymentData(prev => ({ ...prev, country: e.target.value }))}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="United Kingdom">United Kingdom</option>
                   <option value="Ireland">Ireland</option>
@@ -252,9 +272,9 @@ const PaymentStep: React.FC = () => {
                   id="saveCard"
                   checked={paymentData.saveCard}
                   onChange={(e) => setPaymentData(prev => ({ ...prev, saveCard: e.target.checked }))}
-                  className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
-                <label htmlFor="saveCard" className="text-sm">
+                <label htmlFor="saveCard" className="text-sm text-gray-700 dark:text-gray-300">
                   Save this card as default payment method
                 </label>
               </div>
@@ -262,7 +282,7 @@ const PaymentStep: React.FC = () => {
               {/* Payment Button */}
               <button
                 onClick={handlePayment}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors text-lg"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Complete Payment
               </button>
@@ -270,7 +290,7 @@ const PaymentStep: React.FC = () => {
               {/* Back Button */}
               <button
                 onClick={handleBack}
-                className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
