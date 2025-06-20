@@ -25,22 +25,22 @@ const PostcodeStep: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 transition-colors duration-500">
+    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 transition-colors duration-500 flex flex-col">
       <StepIndicator currentStep="postcode" />
       
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
-            SKIP HIRE
-          </h1>
-          <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 italic font-light mb-8">
-            With A Difference
-          </p>
-        </div>
+      <div className="flex-1 flex items-center justify-center px-4 py-6">
+        <div className="w-full max-w-md">
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+              SKIP HIRE
+            </h1>
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 italic font-light mb-8">
+              With A Difference
+            </p>
+          </div>
 
-        {/* Main Card */}
-        <div className="max-w-md mx-auto">
+          {/* Main Card */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
             {/* Location Icon */}
             <div className="flex justify-center mb-6">

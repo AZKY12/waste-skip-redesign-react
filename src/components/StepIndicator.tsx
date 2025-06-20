@@ -9,6 +9,7 @@ interface Step {
   icon: React.ElementType;
   completed: boolean;
   current: boolean;
+  clickable: boolean;
 }
 
 interface StepIndicatorProps {
@@ -17,7 +18,7 @@ interface StepIndicatorProps {
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
   const { isDark, toggleTheme } = useTheme();
-  const { bookingData } = useBooking();
+  const { bookingData, setCurrentStep } = useBooking();
 
   const stepOrder = ['postcode', 'waste-type', 'skip-size', 'permit', 'date', 'payment'];
   const currentStepIndex = stepOrder.indexOf(currentStep);
@@ -28,50 +29,66 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
       title: 'Postcode',
       icon: MapPin,
       completed: currentStepIndex > 0 && !!bookingData.address.postcode,
-      current: currentStep === 'postcode'
+      current: currentStep === 'postcode',
+      clickable: true
     },
     {
       id: 'waste-type',
       title: 'Waste Type',
       icon: Trash2,
       completed: currentStepIndex > 1 && bookingData.wasteTypes.length > 0,
-      current: currentStep === 'waste-type'
+      current: currentStep === 'waste-type',
+      clickable: !!bookingData.address.postcode
     },
     {
       id: 'skip-size',
       title: 'Select Skip',
       icon: Truck,
       completed: currentStepIndex > 2 && !!bookingData.selectedSkip,
-      current: currentStep === 'skip-size'
+      current: currentStep === 'skip-size',
+      clickable: bookingData.wasteTypes.length > 0
     },
     {
       id: 'permit',
       title: 'Permit Check',
       icon: CheckCircle,
       completed: currentStepIndex > 3,
-      current: currentStep === 'permit'
+      current: currentStep === 'permit',
+      clickable: !!bookingData.selectedSkip
     },
     {
       id: 'date',
       title: 'Choose Date',
       icon: Calendar,
       completed: currentStepIndex > 4 && !!bookingData.deliveryDate,
-      current: currentStep === 'date' || currentStep === 'date-selection'
+      current: currentStep === 'date' || currentStep === 'date-selection',
+      clickable: currentStepIndex >= 3
     },
     {
       id: 'payment',
       title: 'Payment',
       icon: CreditCard,
       completed: false,
-      current: currentStep === 'payment'
+      current: currentStep === 'payment',
+      clickable: !!bookingData.deliveryDate
     }
   ];
 
   const completedStepsCount = steps.filter(step => step.completed).length;
   const progressPercentage = (completedStepsCount / steps.length) * 100;
 
+  const handleStepClick = (step: Step) => {
+    if (step.clickable && !step.current) {
+      if (step.id === 'date') {
+        setCurrentStep('date-selection');
+      } else {
+        setCurrentStep(step.id);
+      }
+    }
+  };
+
   return (
-    <div className="w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-100 dark:border-gray-800 mb-3 lg:mb-4 transition-all duration-500">
+    <div className="w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-100 dark:border-gray-800 transition-all duration-500">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
         {/* Single-line navbar layout */}
         <div className="flex items-center justify-between gap-4">
@@ -106,19 +123,28 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
                 <div className="flex items-center justify-between relative z-10">
                   {steps.map((step, index) => (
                     <div key={step.id} className="flex flex-col items-center group">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center border-2 transition-all duration-300 transform group-hover:scale-110 ${
-                        step.completed 
-                          ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md' 
-                          : step.current 
-                          ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
-                          : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500'
-                      }`} style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}>
+                      <button
+                        onClick={() => handleStepClick(step)}
+                        disabled={!step.clickable}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center border-2 transition-all duration-300 transform group-hover:scale-110 ${
+                          step.completed 
+                            ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md cursor-pointer' 
+                            : step.current 
+                            ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
+                            : step.clickable
+                            ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-blue-400 hover:text-blue-500 cursor-pointer'
+                            : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                        }`} 
+                        style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}
+                      >
                         {step.completed ? <Check className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
-                      </div>
+                      </button>
                       
                       <span className={`mt-1 text-xs font-medium transition-colors duration-300 text-center leading-tight ${
                         step.completed || step.current 
                           ? 'text-gray-900 dark:text-white' 
+                          : step.clickable
+                          ? 'text-gray-600 dark:text-gray-400'
                           : 'text-gray-500 dark:text-gray-400'
                       }`}>
                         {step.title}
@@ -187,19 +213,28 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
                 </div>
               )}
               
-              <div className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center border-2 transition-all duration-500 transform hover:scale-110 ${
-                step.completed 
-                  ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md' 
-                  : step.current 
-                  ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
-                  : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 shadow-sm'
-              }`} style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}>
+              <button
+                onClick={() => handleStepClick(step)}
+                disabled={!step.clickable}
+                className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center border-2 transition-all duration-500 transform hover:scale-110 ${
+                  step.completed 
+                    ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md cursor-pointer' 
+                    : step.current 
+                    ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
+                    : step.clickable
+                    ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 shadow-sm cursor-pointer hover:border-blue-400'
+                    : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 shadow-sm cursor-not-allowed'
+                }`} 
+                style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}
+              >
                 {step.completed ? <Check className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
-              </div>
+              </button>
               
               <span className={`mt-1.5 text-xs font-semibold text-center transition-colors duration-300 leading-tight ${
                 step.completed || step.current 
                   ? 'text-gray-900 dark:text-white' 
+                  : step.clickable
+                  ? 'text-gray-600 dark:text-gray-400'
                   : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {step.title}
