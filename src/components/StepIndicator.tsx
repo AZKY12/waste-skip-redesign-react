@@ -1,7 +1,9 @@
 import React from 'react';
 import { Check, MapPin, Trash2, Truck, Calendar, CreditCard, CheckCircle, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useBooking } from '../contexts/BookingContext';
+import LanguageSelector from './LanguageSelector';
 
 interface Step {
   id: string;
@@ -18,6 +20,7 @@ interface StepIndicatorProps {
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
   const { isDark, toggleTheme } = useTheme();
+  const { t } = useLanguage();
   const { bookingData, setCurrentStep } = useBooking();
 
   const stepOrder = ['postcode', 'waste-type', 'skip-size', 'permit', 'date', 'payment'];
@@ -95,8 +98,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
           {/* Left section: Title and step info */}
           <div className="flex items-center gap-4 min-w-0 flex-1">
             <div className="min-w-0">
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent whitespace-nowrap">
-                Skip Hire Process
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 dark:from-green-400 dark:to-blue-400 bg-clip-text text-transparent whitespace-nowrap">
+                EcoSkip Lanka
               </h2>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                 Step {currentStepIndex + 1} of {steps.length}
@@ -114,7 +117,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
                 {/* Background progress line */}
                 <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 -translate-y-1/2 rounded-full overflow-hidden shadow-inner">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 transition-all duration-1000 ease-out" 
+                    className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-green-600 transition-all duration-1000 ease-out" 
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>
@@ -128,11 +131,11 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
                         disabled={!step.clickable}
                         className={`w-8 h-8 rounded-lg flex items-center justify-center border-2 transition-all duration-300 transform group-hover:scale-110 ${
                           step.completed 
-                            ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md cursor-pointer' 
+                            ? 'bg-gradient-to-br from-green-500 to-blue-600 border-transparent text-white shadow-md cursor-pointer' 
                             : step.current 
-                            ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
+                            ? 'bg-white dark:bg-gray-800 border-green-500 text-green-500 shadow-lg ring-2 ring-green-100 dark:ring-green-900' 
                             : step.clickable
-                            ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-blue-400 hover:text-blue-500 cursor-pointer'
+                            ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-green-400 hover:text-green-500 cursor-pointer'
                             : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 cursor-not-allowed'
                         }`} 
                         style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}
@@ -154,29 +157,32 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
                 </div>
               </div>
               
-              <span className="text-xs font-bold text-blue-600 dark:text-blue-400 whitespace-nowrap">
+              <span className="text-xs font-bold text-green-600 dark:text-green-400 whitespace-nowrap">
                 {Math.round(progressPercentage)}%
               </span>
             </div>
           </div>
 
-          {/* Right section: Theme toggle */}
-          <button 
-            onClick={toggleTheme} 
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-sm shrink-0"
-          >
-            {isDark ? (
-              <>
-                <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500" />
-                <span className="hidden sm:inline text-xs font-medium text-gray-700 dark:text-gray-300">Light</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
-                <span className="hidden sm:inline text-xs font-medium text-gray-700 dark:text-gray-300">Dark</span>
-              </>
-            )}
-          </button>
+          {/* Right section: Language selector and theme toggle */}
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <button 
+              onClick={toggleTheme} 
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-sm shrink-0"
+            >
+              {isDark ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-500" />
+                  <span className="hidden sm:inline text-xs font-medium text-gray-700 dark:text-gray-300">Light</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
+                  <span className="hidden sm:inline text-xs font-medium text-gray-700 dark:text-gray-300">Dark</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile progress bar */}
@@ -185,13 +191,13 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
               Progress
             </span>
-            <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+            <span className="text-xs font-bold text-green-600 dark:text-green-400">
               {Math.round(progressPercentage)}%
             </span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden shadow-inner">
             <div 
-              className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-1000 ease-out" 
+              className="bg-gradient-to-r from-green-500 to-blue-600 h-full rounded-full transition-all duration-1000 ease-out" 
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -207,7 +213,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
               {index < steps.length - 1 && (
                 <div className="absolute top-5 left-[calc(100%-12px)] w-6 h-1 bg-gray-200 dark:bg-gray-700 z-0 rounded-full">
                   <div 
-                    className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 rounded-full" 
+                    className="h-full bg-gradient-to-r from-green-500 to-blue-600 transition-all duration-500 rounded-full" 
                     style={{ width: step.completed ? '100%' : '0%' }}
                   />
                 </div>
@@ -218,11 +224,11 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
                 disabled={!step.clickable}
                 className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center border-2 transition-all duration-500 transform hover:scale-110 ${
                   step.completed 
-                    ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent text-white shadow-md cursor-pointer' 
+                    ? 'bg-gradient-to-br from-green-500 to-blue-600 border-transparent text-white shadow-md cursor-pointer' 
                     : step.current 
-                    ? 'bg-white dark:bg-gray-800 border-blue-500 text-blue-500 shadow-lg ring-2 ring-blue-100 dark:ring-blue-900' 
+                    ? 'bg-white dark:bg-gray-800 border-green-500 text-green-500 shadow-lg ring-2 ring-green-100 dark:ring-green-900' 
                     : step.clickable
-                    ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 shadow-sm cursor-pointer hover:border-blue-400'
+                    ? 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 shadow-sm cursor-pointer hover:border-green-400'
                     : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 shadow-sm cursor-not-allowed'
                 }`} 
                 style={step.current ? { animation: 'pulse-slow 1.5s infinite' } : {}}

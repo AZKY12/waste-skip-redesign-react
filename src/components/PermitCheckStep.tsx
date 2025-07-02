@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, Home, Truck, AlertTriangle, Clock, CheckCircle } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import StepIndicator from './StepIndicator';
 
 const PermitCheckStep: React.FC = () => {
+  const { t } = useLanguage();
   const { bookingData, updatePlacement, setCurrentStep } = useBooking();
   const [selectedPlacement, setSelectedPlacement] = useState<'private' | 'public'>(bookingData.placement);
 
@@ -21,7 +23,7 @@ const PermitCheckStep: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 transition-colors duration-500 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-green-900 transition-colors duration-500 flex flex-col">
       <StepIndicator currentStep="permit" />
       
       <div className="flex-1 flex flex-col px-4 py-6 overflow-y-auto">
@@ -29,10 +31,10 @@ const PermitCheckStep: React.FC = () => {
           {/* Header Section */}
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
-              Where will the skip be placed?
+              {t('skip.permit.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-300 text-base max-w-2xl mx-auto">
-              This helps us determine if you need a permit for your skip placement
+              {t('skip.permit.subtitle')}
             </p>
           </div>
 
@@ -57,8 +59,8 @@ const PermitCheckStep: React.FC = () => {
                 </div>
                 
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">Private Property</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">Driveway or private land</p>
+                  <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">{t('skip.permit.private')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">{t('skip.permit.private.desc')}</p>
                 </div>
 
                 {selectedPlacement === 'private' && (
@@ -92,8 +94,8 @@ const PermitCheckStep: React.FC = () => {
                 </div>
                 
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">Public Road</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">Council or public property</p>
+                  <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">{t('skip.permit.public')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">{t('skip.permit.public.desc')}</p>
                 </div>
 
                 {selectedPlacement === 'public' && (
@@ -118,7 +120,7 @@ const PermitCheckStep: React.FC = () => {
                   <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-1">Permit Required</h4>
                   <p className="text-yellow-700 dark:text-yellow-300 text-sm">
                     A permit is required when placing a skip on a public road. We'll handle the permit 
-                    application process for you at an additional cost.
+                    application process for you at an additional cost of Rs. 8,400.
                   </p>
                 </div>
               </div>
@@ -128,7 +130,7 @@ const PermitCheckStep: React.FC = () => {
                 <div>
                   <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">Processing Time</h4>
                   <p className="text-blue-700 dark:text-blue-300 text-sm">
-                    The council requires 5 working days notice to process permit applications. Please plan your 
+                    The local council requires 5 working days notice to process permit applications. Please plan your 
                     delivery date accordingly.
                   </p>
                 </div>
@@ -143,14 +145,14 @@ const PermitCheckStep: React.FC = () => {
               className="flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back
+              {t('common.back')}
             </button>
             
             <button
               onClick={handleContinue}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              Continue
+              {t('common.continue')}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

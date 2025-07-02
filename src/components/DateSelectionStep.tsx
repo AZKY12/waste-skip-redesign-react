@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Info, Calendar as CalendarIcon } from 'lucide-react';
 import { useBooking } from '../contexts/BookingContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import StepIndicator from './StepIndicator';
 
 const DateSelectionStep: React.FC = () => {
+  const { t } = useLanguage();
   const { bookingData, updateDeliveryDate, updateCollectionDate, setCurrentStep } = useBooking();
   const [selectedDate, setSelectedDate] = useState<Date | null>(bookingData.deliveryDate);
   const [currentMonth, setCurrentMonth] = useState(new Date(2025, 5)); // June 2025
@@ -76,10 +78,10 @@ const DateSelectionStep: React.FC = () => {
           disabled={isDisabled}
           className={`h-8 w-8 rounded-lg text-sm font-medium transition-all duration-200 ${
             isSelected
-              ? 'bg-blue-600 text-white shadow-lg scale-110'
+              ? 'bg-green-600 text-white shadow-lg scale-110'
               : isDisabled
               ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
-              : 'text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-600 dark:hover:text-blue-400'
+              : 'text-gray-700 dark:text-gray-300 hover:bg-green-100 dark:hover:bg-green-900 hover:text-green-600 dark:hover:text-green-400'
           }`}
         >
           {day}
@@ -110,7 +112,7 @@ const DateSelectionStep: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900 transition-colors duration-500 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-green-900 transition-colors duration-500 flex flex-col">
       <StepIndicator currentStep="date" />
       
       <div className="flex-1 flex flex-col px-4 py-6 overflow-y-auto">
@@ -118,24 +120,24 @@ const DateSelectionStep: React.FC = () => {
           {/* Header Section */}
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
-              Choose Your Delivery Date
+              {t('skip.date.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-300 text-base max-w-2xl mx-auto">
-              Select your preferred skip delivery date. We'll aim to deliver between 7am and 6pm on your chosen day.
+              {t('skip.date.subtitle')}. We'll aim to deliver between 7am and 6pm on your chosen day.
             </p>
           </div>
 
           {/* Permit Information */}
           {bookingData.permitRequired && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6 flex items-start gap-3 max-w-3xl mx-auto">
-              <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6 flex items-start gap-3 max-w-3xl mx-auto">
+              <Info className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
               <div>
-                <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">Permit Information</h4>
-                <p className="text-blue-700 dark:text-blue-300 text-sm mb-1">
+                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-1">Permit Information</h4>
+                <p className="text-green-700 dark:text-green-300 text-sm mb-1">
                   You've selected to place your skip on a public road, which requires a council permit. 
                   The council needs 5 working days to process permit applications.
                 </p>
-                <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">
+                <p className="text-green-700 dark:text-green-300 text-sm font-medium">
                   The earliest available date is Monday 23 June.
                 </p>
               </div>
@@ -146,7 +148,7 @@ const DateSelectionStep: React.FC = () => {
             {/* Calendar */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-center gap-2 mb-4">
-                <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <CalendarIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Date</h3>
               </div>
               
@@ -190,16 +192,16 @@ const DateSelectionStep: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <CalendarIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  <CalendarIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Collection Date</h3>
                 </div>
-                <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
+                <button className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 text-sm font-medium">
                   Change
                 </button>
               </div>
               
               {getCollectionDate() ? (
-                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
                   <h4 className="text-base font-semibold mb-2 text-gray-900 dark:text-white">
                     {formatDate(getCollectionDate()!)}
                   </h4>
@@ -224,13 +226,13 @@ const DateSelectionStep: React.FC = () => {
               className="flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back
+              {t('common.back')}
             </button>
             
             <button
               onClick={handleContinue}
               disabled={!selectedDate}
-              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
+              className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none"
             >
               Continue to Payment
               <ArrowRight className="w-4 h-4" />
