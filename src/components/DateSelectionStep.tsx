@@ -112,7 +112,7 @@ const DateSelectionStep: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-green-900 transition-colors duration-500 flex flex-col">
+    <div className="h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-green-900 transition-colors duration-500 flex flex-col pt-20">
       <StepIndicator currentStep="date" />
       
       <div className="flex-1 flex flex-col px-4 py-6 overflow-y-auto">

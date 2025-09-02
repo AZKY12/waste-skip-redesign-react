@@ -91,7 +91,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
   };
 
   return (
-    <div className="w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-100 dark:border-gray-800 transition-all duration-500">
+    <div className="w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-lg border-b border-gray-100 dark:border-gray-800 transition-all duration-500 fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
         {/* Single-line navbar layout */}
         <div className="flex items-center justify-between gap-4">
