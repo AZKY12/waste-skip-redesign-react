@@ -185,7 +185,9 @@ const Header: React.FC = () => {
             {/* Mobile menu button */}
             <button
               onClick={handleMobileMenuToggle}
-              className="lg:hidden p-1.5 sm:p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex-shrink-0"
+             className="lg:hidden p-1.5 sm:p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex-shrink-0 z-50 relative"
+             aria-label="Toggle mobile menu"
+             aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
