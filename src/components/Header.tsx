@@ -12,7 +12,6 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   // Handle scroll effect
   useEffect(() => {
@@ -23,16 +22,14 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Handle responsive breakpoints
+  // Handle responsive breakpoints and close mobile menu on desktop
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1024) {
         setIsMenuOpen(false);
       }
     };
     
-    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -41,7 +38,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('.user-menu') && !target.closest('.mobile-menu')) {
+      if (!target.closest('.user-menu') && !target.closest('.mobile-menu') && !target.closest('.mobile-menu-button')) {
         setIsUserMenuOpen(false);
         setIsMenuOpen(false);
       }
@@ -68,7 +65,9 @@ const Header: React.FC = () => {
   };
 
   const handleMobileMenuToggle = () => {
+    console.log('Mobile menu toggle clicked, current state:', isMenuOpen);
     setIsMenuOpen(!isMenuOpen);
+    setIsUserMenuOpen(false); // Close user menu when opening mobile menu
   };
 
   const handleLogout = () => {
@@ -184,10 +183,12 @@ const Header: React.FC = () => {
 
             {/* Mobile menu button */}
             <button
+              type="button"
               onClick={handleMobileMenuToggle}
-             className="lg:hidden p-1.5 sm:p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex-shrink-0 z-50 relative"
+              className="lg:hidden p-1.5 sm:p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 flex-shrink-0 z-50 relative mobile-menu-button"
              aria-label="Toggle mobile menu"
              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
@@ -196,10 +197,13 @@ const Header: React.FC = () => {
 
         {/* Enhanced Mobile/Tablet Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md mobile-menu animate-slide-in-up">
+          <div 
+            id="mobile-navigation"
+            className="lg:hidden absolute top-full left-0 right-0 border-t border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md mobile-menu animate-slide-in-up shadow-lg z-40"
+          >
             <nav className="px-3 sm:px-4 py-3 sm:py-4 space-y-2">
               {/* Language and Theme for mobile */}
-              <div className="xs:hidden flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-700 mb-3">
+              <div className="sm:hidden flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-700 mb-3">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Settings</span>
                 <div className="flex items-center space-x-2">
                   <LanguageSelector />
@@ -209,11 +213,16 @@ const Header: React.FC = () => {
               
               {navigation.map((item) => {
                 const Icon = item.icon;
+                const isActive = window.location.pathname === item.href;
                 return (
                   <button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
-                    className="w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-all duration-300 group text-left"
+                    className={`w-full flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-all duration-300 group text-left ${
+                      isActive 
+                        ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 font-semibold' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                    }`}
                   >
                     <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
                     <span className="font-medium text-sm sm:text-base">{item.name}</span>
@@ -242,14 +251,24 @@ const Header: React.FC = () => {
         )}
         
         {/* Tablet Navigation (md breakpoint) */}
-        <nav className="hidden md:flex lg:hidden items-center justify-center space-x-1 mt-2 pb-2 border-t border-gray-200 dark:border-gray-700 pt-2">
+        <nav className="hidden md:flex lg:hidden items-center justify-center space-x-1 mt-3 pb-3 border-t border-gray-200 dark:border-gray-700 pt-3">
           {navigation.map((item) => {
             const Icon = item.icon;
+            const isActive = window.location.pathname === item.href;
+            const isActive = window.location.pathname === item.href;
             return (
               <button
                 key={item.name}
                 onClick={() => handleNavClick(item.href)}
-                className="flex flex-col items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 hover:bg-green-50 dark:hover:bg-green-900/20 group min-w-0"
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 group whitespace-nowrap ${
+                  isActive 
+                    ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 font-semibold' 
+                    : 'text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                }`}
+                  isActive 
+                    ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 font-semibold' 
+                    : 'text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                }`}
               >
                 <Icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 <span className="truncate">{item.name}</span>
