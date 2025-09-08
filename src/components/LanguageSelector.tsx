@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Globe } from 'lucide-react';
 import { useLanguage, Language } from '../contexts/LanguageContext';
 
