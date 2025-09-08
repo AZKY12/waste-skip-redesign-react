@@ -286,20 +286,6 @@ FRONTEND_URL=https://your-domain.com
 
 ---
 
-## 📞 Support
-
-### **Contact Information**
-- **Email**: info@ecoskiplanka.lk
-- **Phone**: +94 11 234 5678
-- **Website**: https://ecoskiplanka.lk
-
-### **Technical Support**
-- **Issues**: GitHub Issues for bug reports
-- **Documentation**: Comprehensive inline documentation
-- **Community**: Sri Lankan developer community support
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
