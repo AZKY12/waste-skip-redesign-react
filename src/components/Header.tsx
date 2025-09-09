@@ -184,13 +184,13 @@ export default function Header() {
                     onClick={() => handleNavigation('/login')}
                     className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-300"
                   >
-                    {t('auth.login')}
+                    {t('nav.login')}
                   </button>
                   <button
                     onClick={() => handleNavigation('/register')}
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-md transition-colors duration-300 shadow-sm"
                   >
-                    {t('auth.register')}
+                    {t('nav.register')}
                   </button>
                 </div>
               )}
@@ -282,7 +282,7 @@ export default function Header() {
                 {user ? (
                   <>
                     <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                      {t('auth.welcomeBack')}, {user.name}
+                      Welcome back, {user.name}
                     </div>
                     <button
                       onClick={() => handleNavigation('/dashboard')}
@@ -296,7 +296,7 @@ export default function Header() {
                       className="flex items-center w-full px-3 py-2 text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300"
                     >
                       <LogOut className="w-5 h-5 mr-2" />
-                      {t('auth.logout')}
+                      {t('nav.logout')}
                     </button>
                   </>
                 ) : (
@@ -305,13 +305,13 @@ export default function Header() {
                       onClick={() => handleNavigation('/login')}
                       className="block w-full px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300"
                     >
-                      {t('auth.login')}
+                      {t('nav.login')}
                     </button>
                     <button
                       onClick={() => handleNavigation('/register')}
                       className="block w-full px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-base font-medium rounded-md transition-colors duration-300 shadow-sm"
                     >
-                      {t('auth.register')}
+                      {t('nav.register')}
                     </button>
                   </div>
                 )}
