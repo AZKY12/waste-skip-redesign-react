@@ -223,24 +223,24 @@ const Index = () => {
             </div>
 
             {/* Enhanced Stats Row */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 max-w-5xl mx-auto px-2">
               {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
                   <div
                     key={index}
-                    className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 animate-slide-in-up cursor-pointer group"
+                    className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-2 sm:p-4 lg:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20 animate-slide-in-up cursor-pointer group"
                     style={{ animationDelay: `${1.2 + index * 0.2}s` }}
                     onClick={() => scrollToSection('features')}
                   >
                     <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                        <Icon className="w-6 h-6 text-white" />
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${stat.color} rounded-full flex items-center justify-center mb-2 sm:mb-3 group-hover:scale-110 transition-transform`}>
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                       </div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors leading-tight">
                         {stat.number}
                       </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center leading-tight px-1">
                         {stat.label}
                       </div>
                     </div>
